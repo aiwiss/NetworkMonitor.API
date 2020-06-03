@@ -3,8 +3,19 @@ const app = express();
 const fileupload = require('express-fileupload');
 
 const PORT = process.env.PORT;
+const pw = process.env.NETPW;
 
 app.use(fileupload());
+
+const auth = (req, res, next) => {
+  if (req.query.secret != pw) {
+    res.status(401).end();
+  } else {
+    next();
+  }
+}
+
+app.use(auth);
 
 app.get('/download', (req, res) => {
   const filePath = `${__dirname}/d/50MBTest.txt`;
